@@ -2,7 +2,8 @@
 
 | Component | Supported baseline |
 | --- | --- |
-| Retrospectum Loom / Mixin | 0.2.0 (unreleased), Mixin 0.8.7 |
+| Retrospectum Loom | 0.2.1 |
+| Retrospectum Mixin | 0.2.0, Mixin 0.8.7 |
 | Minecraft / Forge | 1.6.4 / 9.11.1.1345 |
 | Gradle / build JVM | 8.14.6 / JDK 17 |
 | Compiler and annotation processor | JDK 8 |

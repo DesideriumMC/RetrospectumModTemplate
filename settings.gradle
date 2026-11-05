@@ -18,7 +18,7 @@ pluginManagement {
         mavenCentral()
     }
     plugins {
-        id 'dev.desiderium.retro.loom' version providers.gradleProperty('loom_version').getOrElse('0.2.0')
+        id 'dev.desiderium.retro.loom' version providers.gradleProperty('loom_version').getOrElse('0.2.1')
     }
     def checkout = providers.gradleProperty('retrospectumLoomCheckout').orNull
     if (checkout) includeBuild(checkout)

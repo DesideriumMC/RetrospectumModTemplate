@@ -8,7 +8,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(World.class)
 public abstract class WorldMixin {
-    @Inject(method = "<init>", at = @At("RETURN"))
+    // Constructor signatures differ between client and server; names are never obfuscated.
+    @Inject(method = "<init>*", at = @At("RETURN"), remap = false)
     private void example$worldCreated(CallbackInfo ci) {
         System.out.println("[EXAMPLE-MOD] World created");
     }

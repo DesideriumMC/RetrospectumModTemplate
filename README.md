@@ -60,18 +60,18 @@ Without setup, Loom can also resolve an installed Java 7 JDK through Gradle
 Toolchains. `java7Home` and `org.gradle.java.installations.paths` remain optional manual
 overrides. The daemon JVM version is set in `gradle/gradle-daemon-jvm.properties`.
 
-The repository includes prebuilt Loom and Mixin in `libs/`. Gradle downloads
-the remaining build and game dependencies.
+Gradle resolves Loom and Mixin from `https://maven.desiderium.dev/releases/`,
+along with the remaining build and game dependencies from their upstream repositories.
 
 ## Build tool versions
 
-Versions and paths are configured by `loom_version` and `mixin_bootstrap` in
-`gradle.properties`. Bundled artifact versions and checksums are listed in
-[libs/](libs/README.md).
+Versions are configured by `loom_version` and `mixin_version` in
+`gradle.properties`. For local Maven testing, set `retrospectumMavenUrl` to a
+repository directory URI. Set `mixin_bootstrap` to use a local runtime JAR.
 
 To develop against Loom or Mixin source, set `retrospectumLoomCheckout` or
 `retrospectumMixinCheckout` to the corresponding checkout. The Mixin source mode
-uses its built `0.1.0-SNAPSHOT` Bootstrap.
+uses its built Bootstrap matching `mixin_version`.
 
 ## Mod configuration
 
@@ -97,7 +97,9 @@ written to `build/prepared-sources/main/java`.
 and remaps the release JAR to SRG names. The output JAR is named
 `<mod_id>-retrospectum-1.6.4-<version>.jar`.
 
-The example injects into the world constructor and prints a message.
+The example injects into all world constructors and prints a message. Constructor
+selection uses a wildcard with remapping disabled because client and server
+constructor signatures differ, while constructor names remain unchanged.
 
 ## Distribution
 

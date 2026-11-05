@@ -36,6 +36,18 @@ installed JDKs or installs pinned, verified packages under project `.jdks/`.
 Machine-local paths are recorded in ignored files; setup creates no global SDK links.
 macOS, ARM and musl Linux are outside the supported setup/test matrix.
 
+## Automated builds
+
+The **Build mod** GitHub Actions workflow runs on pushes and pull requests, and
+can also be started manually. It builds this project using the Loom and Mixin
+versions in `gradle.properties`, with Java 7 APIs, the Java 8 compiler and Gradle
+on Java 17.
+
+Download `mod-<commit SHA>` from the workflow run's **Artifacts** section to get
+the distributable SRG JAR. Development (`-dev.jar`) archives are excluded.
+Artifacts are retained for 14 days. Failed builds upload available reports
+for 7 days. Install Retrospectum Mixin separately alongside the mod.
+
 ## Next steps
 
 - [Development, Mixin mapping and local toolchain verification](docs/DEVELOPMENT.md)

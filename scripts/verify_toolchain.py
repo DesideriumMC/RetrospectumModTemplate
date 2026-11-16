@@ -142,15 +142,17 @@ dependencies {
 }
 tasks.register('verifyForgeBinpatches') {
     doLast {
+        def forgeJar = configurations.forge.singleFile
         def directory = layout.buildDirectory.dir('verification/forge').get().asFile
         copy {
-            from zipTree(configurations.forge.singleFile)
+            from zipTree(forgeJar)
             include 'binpatches.pack.lzma'
             into directory
         }
         def patches = new net.fabricmc.loom.mcp.Binpatch.Pack().read(new File(directory, 'binpatches.pack.lzma').toPath())
         assert patches.client.modificationCount > 0
         assert patches.server.modificationCount > 0
+        new File(directory, 'universal-path.txt').setText(forgeJar.absolutePath, 'UTF-8')
     }
 }
 """)
@@ -300,7 +302,9 @@ if (providers.gradleProperty('verification.consumerJvm6').isPresent()) {
     shutil.copy2(release, production / 'mods' / release.name)
     shutil.copy2(runtime, production / 'mods' / runtime.name)
     cache = Path(os.environ.get('GRADLE_USER_HOME', Path.home() / '.gradle')) / 'caches'
-    forge, = list((cache / 'modules-2/files-2.1/net.minecraftforge/forge/1.6.4-9.11.1.1345').rglob('*universal.jar'))
+    forge_path = fixture / 'build/verification/forge/universal-path.txt'
+    forge = Path(forge_path.read_text(encoding='utf-8').strip())
+    assert forge.is_file(), f'Gradle resolved a missing Forge archive: {forge}'
     assert hashlib.sha256(forge.read_bytes()).hexdigest() == '7acfb321c4b1fd35253b73dd2715f47cf3c38ee3ec4586d762c217114697df01'
     shutil.copy2(forge, production / 'forge.jar')
     # Loom already downloaded the official Mojang version descriptor and server.

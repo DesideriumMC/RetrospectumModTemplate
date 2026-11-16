@@ -1,0 +1,45 @@
+name: Fetch Forge artifacts
+description: Verify the Forge 1.6.4 archives and provision them for Gradle
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        repository_root="$RUNNER_TEMP/verified-forge"
+        forge_path=net/minecraftforge/forge/1.6.4-9.11.1.1345
+        mkdir -p "$repository_root/$forge_path"
+        cd "$repository_root"
+        if [[ "$RUNNER_OS" == Windows ]]; then
+          directory=$(pwd -W)
+        else
+          directory=$(pwd)
+        fi
+        fetch() {
+          local path="$forge_path/$1" sha="$2" repository
+          for repository in https://maven.minecraftforge.net https://bmclapi2.bangbang93.com/maven; do
+            if curl -fsSL --max-time 30 -o "$path" "$repository/$path" &&
+               printf '%s  %s\n' "$sha" "$path" | sha256sum --check; then
+              return 0
+            fi
+          done
+          echo "Could not fetch the verified Forge artifact: $1" >&2
+          return 1
+        }
+        fetch forge-1.6.4-9.11.1.1345-src.zip 8543c4bbc02ace1fc72b9a85b38c01276eef07080f86bae847c1696af5ee749f
+        fetch forge-1.6.4-9.11.1.1345-universal.jar 7acfb321c4b1fd35253b73dd2715f47cf3c38ee3ec4586d762c217114697df01
+        printf 'VERIFIED_FORGE_REPOSITORY=%s\n' "$directory" >> "$GITHUB_ENV"
+        mkdir -p "$GRADLE_USER_HOME/init.d"
+        cat > "$GRADLE_USER_HOME/init.d/verified-forge.gradle" <<'GRADLE'
+        gradle.beforeProject { project ->
+            project.repositories.exclusiveContent {
+                forRepository {
+                    project.repositories.maven {
+                        name = 'VerifiedForge'
+                        url = project.uri(System.getenv('VERIFIED_FORGE_REPOSITORY'))
+                        metadataSources { artifact() }
+                    }
+                }
+                filter { includeVersion('net.minecraftforge', 'forge', '1.6.4-9.11.1.1345') }
+            }
+        }
+        GRADLE

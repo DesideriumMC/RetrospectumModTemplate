@@ -87,7 +87,7 @@ jobs:
         with:
           python-version: '3.13'
       - uses: gradle/actions/setup-gradle@v6
-      - uses: ./template/.github/actions/fetch-forge-mappings
+      - uses: ./template/.github/actions/fetch-forge-artifacts
       - name: Build current shared runtime
         run: |
           bash mixin/gradlew -p mixin --no-daemon --console=plain "-Pjava7Home=$JDK7" "-Porg.gradle.java.installations.paths=$JDK7,$JDK8,$JAVA_HOME" :mixin-bootstrap:runtimeJar
@@ -108,7 +108,6 @@ jobs:
           --game-java "$JDK7/bin/java" --game-java "$JDK8/bin/java"
           --gradle-property "java7Home=$JDK7"
           --gradle-property "org.gradle.java.installations.paths=$JDK7,$JDK8,$JAVA_HOME"
-          --gradle-property "forgeMappingsFile=$FORGE_MAPPINGS_FILE"
       - uses: actions/upload-artifact@v6
         if: always()
         with:

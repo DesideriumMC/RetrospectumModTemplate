@@ -59,8 +59,7 @@ repositories {
 dependencies {
     minecraft 'com.mojang:minecraft:1.6.4'
     forge 'net.minecraftforge:forge:1.6.4-9.11.1.1345:universal'
-    def forgeMappingsFile = providers.gradleProperty('forgeMappingsFile').orNull
-    mappings(forgeMappingsFile == null ? 'net.minecraftforge:forge:1.6.4-9.11.1.1345:src@zip' : files(forgeMappingsFile))
+    mappings 'net.minecraftforge:forge:1.6.4-9.11.1.1345:src@zip'
     if (mixinCheckout) {
         mixinBootstrap files("${mixinCheckout}/runtime/mixin-bootstrap/build/libs/retrospectum-mixin-${mixinVersion}.jar")
     } else if (localBootstrap) {

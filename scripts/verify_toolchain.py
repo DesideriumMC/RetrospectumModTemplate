@@ -403,8 +403,7 @@ tasks.withType(JavaCompile).configureEach { sourceCompatibility = '1.7'; targetC
 dependencies {
     minecraft 'com.mojang:minecraft:1.6.4'
     forge 'net.minecraftforge:forge:1.6.4-9.11.1.1345:universal'
-    def forgeMappingsFile = providers.gradleProperty('forgeMappingsFile').orNull
-    mappings(forgeMappingsFile == null ? 'net.minecraftforge:forge:1.6.4-9.11.1.1345:src@zip' : files(forgeMappingsFile))
+    mappings 'net.minecraftforge:forge:1.6.4-9.11.1.1345:src@zip'
 }
 """, encoding='utf-8')
     producer_source.write_text('package probe; public final class Dependency { public static long time(net.minecraft.world.World world) { return world.getWorldTime(); } }\n', encoding='utf-8')

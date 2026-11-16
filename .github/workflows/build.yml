@@ -21,9 +21,9 @@ jobs:
       - name: Configure build JDKs
         run: bash ./setup.sh
       - uses: gradle/actions/setup-gradle@v6
-      - uses: ./.github/actions/fetch-forge-mappings
+      - uses: ./.github/actions/fetch-forge-artifacts
       - name: Build mod
-        run: bash ./build.sh --no-daemon --console=plain "-PforgeMappingsFile=$FORGE_MAPPINGS_FILE" clean build
+        run: bash ./build.sh --no-daemon --console=plain clean build
       - name: Upload distributable mod
         uses: actions/upload-artifact@v6
         with:

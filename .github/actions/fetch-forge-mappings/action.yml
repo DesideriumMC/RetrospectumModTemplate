@@ -1,0 +1,25 @@
+name: Fetch Forge mappings
+description: Download and verify the Forge 1.6.4 mappings archive
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        path=net/minecraftforge/forge/1.6.4-9.11.1.1345/forge-1.6.4-9.11.1.1345-src.zip
+        archive=${path##*/}
+        sha=8543c4bbc02ace1fc72b9a85b38c01276eef07080f86bae847c1696af5ee749f
+        cd "$RUNNER_TEMP"
+        if [[ "$RUNNER_OS" == Windows ]]; then
+          directory=$(pwd -W)
+        else
+          directory=$(pwd)
+        fi
+        for repository in https://maven.minecraftforge.net https://bmclapi2.bangbang93.com/maven; do
+          if curl -fsSL --max-time 30 -o "$archive" "$repository/$path" &&
+             printf '%s  %s\n' "$sha" "$archive" | sha256sum --check; then
+            echo "FORGE_MAPPINGS_FILE=$directory/$archive" >> "$GITHUB_ENV"
+            exit 0
+          fi
+        done
+        echo 'Could not fetch the verified Forge mappings archive.' >&2
+        exit 1

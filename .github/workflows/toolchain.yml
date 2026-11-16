@@ -35,6 +35,10 @@ permissions:
 
 jobs:
   integration:
+    if: >-
+      github.repository == 'DesideriumMC/RetrospectumModTemplate' ||
+      github.repository == 'DesideriumMC/RetrospectumLoom' ||
+      github.repository == 'DesideriumMC/RetrospectumMixin'
     strategy:
       fail-fast: false
       matrix:
